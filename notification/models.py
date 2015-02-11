@@ -235,7 +235,7 @@ def send(users, label, extra_context=None,
     You can pass in on_site=False to prevent the notice emitted from being
     displayed on the site.
     """
-    headers = {}
+    headers = {'Reply-To': "support@transifex.com"}
 
     if reply_to:
         headers['Reply-To'] = reply_to
