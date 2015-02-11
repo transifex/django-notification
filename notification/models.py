@@ -220,7 +220,8 @@ def get_template_name(label, f):
     return 'notification/%s/%s' % (label, f)
 
 
-def send(users, label, extra_context=None, on_site=True, MailClass=None):
+def send(users, label, extra_context=None,
+         on_site=True, MailClass=None, reply_to=None):
     """
     Creates a new notice.
 
@@ -234,6 +235,11 @@ def send(users, label, extra_context=None, on_site=True, MailClass=None):
     You can pass in on_site=False to prevent the notice emitted from being
     displayed on the site.
     """
+    headers = {}
+
+    if reply_to:
+        headers['Reply-To'] = reply_to
+
     if extra_context is None:
         extra_context = {}
 
@@ -299,7 +305,8 @@ def send(users, label, extra_context=None, on_site=True, MailClass=None):
             }, context)
 
             msg = EmailMultiAlternatives(
-                subject, body, settings.DEFAULT_FROM_EMAIL, recipients
+                subject, body, settings.DEFAULT_FROM_EMAIL,
+                recipients, headers=headers
             )
             msg.attach_alternative(html_body, 'text/html')
             msg.send()
